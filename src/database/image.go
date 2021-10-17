@@ -6,7 +6,7 @@ import (
 )
 
 func (db Database) AddImage(model unsplash.ImageModel) error {
-	stmt, err := db.handler.Prepare("INSERT INTO `images` (`imageId`, `userId`) VALUES (?, ?);")
+	stmt, err := db.handler.Prepare("INSERT INTO `images` (`imageId`, `userId`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `id` = `id`;")
 	if err != nil {
 		log.Printf("can't prepare the query to add an image: %v\n", err)
 		return err

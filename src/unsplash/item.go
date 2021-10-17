@@ -2,9 +2,10 @@ package unsplash
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/cruffinoni/MyLi-UnspalshMe/src/application/args"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 )
@@ -13,14 +14,14 @@ type Api struct {
 	apiKey string
 }
 
-func New() Api {
+func New() (Api, error) {
 	key := os.Getenv("UNSPLASH_API_ACCESS_KEY")
 	if len(key) == 0 {
-		log.Fatalf("Missing access key")
+		return Api{}, errors.New("missing unsplash api access key")
 	}
 	return Api{
 		apiKey: key,
-	}
+	}, nil
 }
 
 func (api Api) prepareRequest(url string) (*http.Request, error) {
@@ -33,8 +34,9 @@ func (api Api) prepareRequest(url string) (*http.Request, error) {
 	return req, nil
 }
 
-func (api Api) GetImages(url string) (SearchQueryModel, error) {
-	request, err := api.prepareRequest(url)
+func (api Api) GetImages(args args.ProgArg) (SearchQueryModel, error) {
+	reqUrl := fmt.Sprintf("https://api.unsplash.com/search/photos?query=%v&page=%v", args.Query, args.Page)
+	request, err := api.prepareRequest(reqUrl)
 	if err != nil {
 		return SearchQueryModel{}, err
 	}
@@ -42,21 +44,18 @@ func (api Api) GetImages(url string) (SearchQueryModel, error) {
 	var response *http.Response
 	response, err = client.Do(request)
 	if err != nil {
-		log.Printf("Err during http request: %v\n", err)
 		return SearchQueryModel{}, err
 	}
 	if response.StatusCode != http.StatusOK {
-		log.Printf("Code is not 200: %v\n", response.StatusCode)
+		return SearchQueryModel{}, errors.New(fmt.Sprintf("status code should be %v but is %v instead", http.StatusOK, response.StatusCode))
 	}
 	var body []byte
 	if body, err = ioutil.ReadAll(response.Body); err != nil {
-		log.Printf("Cant read all: %v\n", err)
 		return SearchQueryModel{}, err
 	}
 
 	var data SearchQueryModel
 	if err = json.Unmarshal(body, &data); err != nil {
-		log.Printf("JSON unmarshal: %v\n", err)
 		return SearchQueryModel{}, err
 	}
 	return data, nil

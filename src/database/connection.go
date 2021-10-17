@@ -23,7 +23,11 @@ func (db Database) createAndSelectDatabase(databaseName string) error {
 }
 
 func (db Database) createImageTable() error {
-	const query = "CREATE TABLE IF NOT EXISTS `images` (`id` INT NOT NULL AUTO_INCREMENT, `imageId` VARCHAR(255) NOT NULL, `userId` VARCHAR(255) NOT NULL, PRIMARY KEY (`id`));"
+	const query = "CREATE TABLE IF NOT EXISTS `images` (" +
+		"`id` INT NOT NULL AUTO_INCREMENT," +
+		"`imageId` VARCHAR(255) NOT NULL," +
+		"`userId` VARCHAR(255) NOT NULL," +
+		"PRIMARY KEY (`id`), UNIQUE(`imageId`));"
 	_, err := db.handler.Exec(query)
 	return err
 }
