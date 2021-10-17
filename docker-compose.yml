@@ -26,8 +26,6 @@ services:
       MYSQL_ADDRESS: "${MYSQL_ADDRESS}"
       UNSPLASH_API_ACCESS_KEY: "${UNSPLASH_API_ACCESS_KEY}"
 
-
-
 volumes:
   db-volume:
 
