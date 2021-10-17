@@ -16,3 +16,6 @@ vendor/
 
 # IDE files
 .idea/
+
+# Environment config file
+.env

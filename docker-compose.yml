@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  database:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: "${MYSQL_DB_NAME}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_PASSWORD}"
+    volumes:
+      - db-volume:/var/lib/mysql
+    networks:
+      - back-tier
+
+  unsplash-me:
+    build:
+      context: "."
+    ports:
+      - "3306:3306"
+    depends_on:
+      - "database"
+    networks:
+      - back-tier
+    environment:
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_DB_NAME: "${MYSQL_DB_NAME}"
+      MYSQL_ADDRESS: "${MYSQL_ADDRESS}"
+      UNSPLASH_API_ACCESS_KEY: "${UNSPLASH_API_ACCESS_KEY}"
+
+
+
+volumes:
+  db-volume:
+
+networks:
+  back-tier:

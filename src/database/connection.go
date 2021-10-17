@@ -46,7 +46,7 @@ func New() (*Database, error) {
 	var (
 		db            Database
 		err           error
-		seekedEnvKeys = []string{"MYSQL_USER", "MYSQL_PASSWORD", "MYSQL_DB_NAME"}
+		seekedEnvKeys = []string{"MYSQL_PASSWORD", "MYSQL_ADDRESS", "MYSQL_DB_NAME"}
 		envKeys       []string
 	)
 	for idx, key := range seekedEnvKeys {
@@ -55,7 +55,8 @@ func New() (*Database, error) {
 			return nil, errors.New(fmt.Sprintf("environment key '%v' is missing\n", key))
 		}
 	}
-	db.handler, err = sql.Open("mysql", fmt.Sprintf("%v:%v@/", envKeys[0], envKeys[1]))
+	db.handler, err = sql.Open("mysql", fmt.Sprintf("root:%v@tcp(%v:3306)/",
+		envKeys[0], envKeys[1]))
 	if err != nil {
 		log.Printf("unable to connect to mysql database: %v\n", err)
 		db.Close()
