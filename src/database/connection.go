@@ -26,7 +26,7 @@ func (db Database) createImageTable() error {
 	const query = "CREATE TABLE IF NOT EXISTS `images` (" +
 		"`id` INT NOT NULL AUTO_INCREMENT," +
 		"`imageId` VARCHAR(255) NOT NULL," +
-		"`userId` VARCHAR(255) NOT NULL," +
+		"`authorId` VARCHAR(255) NOT NULL," +
 		"PRIMARY KEY (`id`), UNIQUE(`imageId`));"
 	_, err := db.handler.Exec(query)
 	return err
@@ -52,7 +52,7 @@ func New() (*Database, error) {
 	for idx, key := range seekedEnvKeys {
 		envKeys = append(envKeys, os.Getenv(key))
 		if len(envKeys[idx]) == 0 {
-			return nil, errors.New(fmt.Sprintf("envkey %v is missing\n", key))
+			return nil, errors.New(fmt.Sprintf("environment key '%v' is missing\n", key))
 		}
 	}
 	db.handler, err = sql.Open("mysql", fmt.Sprintf("%v:%v@/", envKeys[0], envKeys[1]))

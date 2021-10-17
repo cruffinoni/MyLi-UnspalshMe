@@ -1,10 +1,10 @@
 package application
 
 import (
-	"fmt"
 	"github.com/cruffinoni/MyLi-UnspalshMe/src/application/args"
 	"github.com/cruffinoni/MyLi-UnspalshMe/src/database"
 	"github.com/cruffinoni/MyLi-UnspalshMe/src/unsplash"
+	"github.com/cruffinoni/MyLi-UnspalshMe/src/unsplash/models"
 )
 
 type Application struct {
@@ -17,7 +17,7 @@ func (app Application) CloseDatabase() {
 	app.database.Close()
 }
 
-func (app Application) AddImageToDatabase(image unsplash.ImageModel) error {
+func (app Application) AddImageToDatabase(image models.Image) error {
 	return app.database.AddImage(image)
 }
 
@@ -37,7 +37,6 @@ func New() (*Application, error) {
 	if app.args, err = args.New(); err != nil {
 		return nil, err
 	}
-	fmt.Printf("Args? %+v\n", app.args)
 	if app.api, err = unsplash.New(); err != nil {
 		return nil, err
 	}

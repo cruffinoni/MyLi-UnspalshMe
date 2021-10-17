@@ -1,12 +1,12 @@
 package database
 
 import (
-	"github.com/cruffinoni/MyLi-UnspalshMe/src/unsplash"
+	"github.com/cruffinoni/MyLi-UnspalshMe/src/unsplash/models"
 	"log"
 )
 
-func (db Database) AddImage(model unsplash.ImageModel) error {
-	stmt, err := db.handler.Prepare("INSERT INTO `images` (`imageId`, `userId`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `id` = `id`;")
+func (db Database) AddImage(model models.Image) error {
+	stmt, err := db.handler.Prepare("INSERT INTO `images` (`imageId`, `authorId`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `id` = `id`;")
 	if err != nil {
 		log.Printf("can't prepare the query to add an image: %v\n", err)
 		return err

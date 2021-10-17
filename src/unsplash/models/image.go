@@ -1,6 +1,6 @@
-package unsplash
+package models
 
-type ImageModel struct {
+type Image struct {
 	ID          string `json:"id"`
 	CreatedAt   string `json:"created_at"`
 	Width       int    `json:"width"`
@@ -46,8 +46,8 @@ type ImageModel struct {
 	} `json:"links"`
 }
 
-type SearchQueryModel struct {
-	Total      int          `json:"total"`
-	TotalPages int          `json:"total_pages"`
-	Results    []ImageModel `json:"results"`
+type SearchImageQuery struct {
+	Total      int     `json:"total"`
+	TotalPages int     `json:"total_pages"`
+	Results    []Image `json:"results"`
 }
